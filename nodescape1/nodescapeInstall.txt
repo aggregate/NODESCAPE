@@ -1,0 +1,32 @@
+A.	(Optional)  Set up lm_sensors
+	1.	Install lm_sensors on head
+
+	2.	Run "sensors-detect" on head.  Answer yes to set up sensors on head.  
+			Run "sensors" to confirm operation
+
+	3.	Run "sensors-detect" again, and DO NOT overwrite config.  
+			Script will instead report required modules
+
+	4.	Add specified modules to /etc/warewulf/bootstrap.conf.  
+			Rebuild bootstrap image, reboot nodes.
+
+	5.	Run "sensors" on nodes to confirm operation
+
+B.	Setup nodescape
+	1.	Pull current nodescape tarball, and unpack to head
+	
+	2.	Confirm that dynamic_hosts is being provisioned to nodes, 
+			and check that it resolves the head's hostname from node
+	
+	3.	Run the following commands on in screen session on head:
+			Launch server on head:
+			./nodescape ClusterImages/k[cluster].pgm ClusterImages/b[cluster].ppm
+			Run node clients:
+			while true; do pdsh -w n[00-XX] ~/NODESCAPE/ClusterScripts/[clusterscript].sh | sort; sleep 10; done;
+
+C.	Troubleshooting:
+	1.	"Resource temporarily unavailable"
+			Most likely not resolving head hostname.  Check dynamic_hosts
+	2.	sensors-detect won't run on nodes!
+			Don't, it breaks.  Load modules manually via bootstrap config
+			
